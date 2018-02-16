@@ -13,10 +13,12 @@ class Quiz {
     var image: UIImage
     var subject: String
     var description: String
+    var questions: [Question]
     
-    init(image: UIImage, subject: String, description: String) {
+    init(image: UIImage, subject: String, description: String, questions: [Question]) {
         self.image = image
         self.subject = subject
         self.description = description
+        self.questions = questions
     }
 }
