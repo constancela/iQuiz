@@ -32,7 +32,7 @@ class ListScreen: UIViewController {
     var quizzes: [Quiz] = []
     let storage = UserDefaults.standard
     @IBOutlet weak var tableView: UITableView!
-    
+    var jsonUrl = "https://tednewardsandbox.site44.com/questions.json"
     override func viewDidLoad() {
         super.viewDidLoad()
         variables.score = 0
@@ -48,8 +48,7 @@ class ListScreen: UIViewController {
     
     // Download json data online
     func downloadData() {
-        let jsonUrl = "https://tednewardsandbox.site44.com/questions.json"
-        guard let url = URL(string: jsonUrl) else { return }
+        guard let url = URL(string: self.jsonUrl) else { return }
         URLSession.shared.dataTask(with: url) { (data, response, err) in
             guard let data = data else { return }
             self.storage.set(data, forKey: "jsonQuiz")
@@ -94,9 +93,13 @@ class ListScreen: UIViewController {
     @IBAction func settingsButton(_ sender: UIBarButtonItem) {
         let alert = UIAlertController(title: "Settings", message: "Settings go here", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default))
+        alert.addTextField { (textField) in
+            textField.text = "Enter URL"
+        }
         alert.addAction(UIAlertAction(title: "Check now", style: .default, handler: { action in
             var alertMessage: String
             if Reachability.isConnectedToNetwork() {
+                self.jsonUrl = alert.textFields![0].text!
                 self.downloadData()
                 self.tableView.reloadData()
                 alertMessage = "You are connected. Quizzes updated."
