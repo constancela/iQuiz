@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9D4EDBA5203E8D35006580CE /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D4EDBA4203E8D35006580CE /* Reachability.swift */; };
 		9D52A0FC20369A1800596927 /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D52A0FB20369A1800596927 /* Question.swift */; };
 		9DD54CCA20318D6500EC92BF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DD54CC920318D6500EC92BF /* AppDelegate.swift */; };
 		9DD54CCF20318D6500EC92BF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9DD54CCD20318D6500EC92BF /* Main.storyboard */; };
@@ -21,6 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9D4EDBA4203E8D35006580CE /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		9D52A0FB20369A1800596927 /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
 		9DD54CC620318D6500EC92BF /* iQuiz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iQuiz.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DD54CC920318D6500EC92BF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -76,6 +78,7 @@
 				9DD54CE52036748300EC92BF /* QuestionScene.swift */,
 				9DD54CE32036746700EC92BF /* AnswerScene.swift */,
 				9DD54CE72036749200EC92BF /* FinishedScene.swift */,
+				9D4EDBA4203E8D35006580CE /* Reachability.swift */,
 				9DD54CD020318D6500EC92BF /* Assets.xcassets */,
 				9DD54CD220318D6500EC92BF /* LaunchScreen.storyboard */,
 			);
@@ -159,6 +162,7 @@
 				9DD54CE82036749200EC92BF /* FinishedScene.swift in Sources */,
 				9DD54CCA20318D6500EC92BF /* AppDelegate.swift in Sources */,
 				9DD54CE62036748300EC92BF /* QuestionScene.swift in Sources */,
+				9D4EDBA5203E8D35006580CE /* Reachability.swift in Sources */,
 				9DD54CE42036746700EC92BF /* AnswerScene.swift in Sources */,
 				9DD54CE0203195D700EC92BF /* Quiz.swift in Sources */,
 				9DD54CDC20318DCD00EC92BF /* ListScreen.swift in Sources */,

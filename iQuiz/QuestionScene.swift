@@ -26,10 +26,10 @@ class QuestionScene: UIViewController {
         variables.segmentedControl = self.segmentedControl
         let currentQuestion = variables.remainingQuestions[0]
         question.text = currentQuestion.question
-        A.text = "A. \(currentQuestion.A)"
-        B.text = "B. \(currentQuestion.B)"
-        C.text = "C. \(currentQuestion.C)"
-        D.text = "D. \(currentQuestion.D)"
+        A.text = "A. \(currentQuestion.answers[0])"
+        B.text = "B. \(currentQuestion.answers[1])"
+        C.text = "C. \(currentQuestion.answers[2])"
+        D.text = "D. \(currentQuestion.answers[3])"
     }
     
     @IBAction func swipeLeft(_ sender: UISwipeGestureRecognizer) {

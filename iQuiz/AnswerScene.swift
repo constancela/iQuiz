@@ -22,16 +22,16 @@ class AnswerScene: UIViewController {
         let currentQuestion = variables.remainingQuestions[0]
         question.text = currentQuestion.question
         let selectedAnswerIndex = variables.segmentedControl.selectedSegmentIndex
-        let selectedAnswer = variables.segmentedControl.titleForSegment(at: selectedAnswerIndex)
-        if selectedAnswer == currentQuestion.correctAnswer {
+        let correctAnswerIndex  = Int(currentQuestion.correctAnswer)! - 1
+        if selectedAnswerIndex == correctAnswerIndex {
             variables.score = variables.score + 1
             answerResult.text = "CORRECT"
         } else {
             answerResult.text = "INCORRECT"
         }
         
-        yourAnswer.text = getAnswerText(letter: selectedAnswer!)
-        correctAnswer.text = getAnswerText(letter: currentQuestion.correctAnswer)
+        yourAnswer.text = currentQuestion.answers[selectedAnswerIndex]
+        correctAnswer.text = currentQuestion.answers[correctAnswerIndex]
     }
 
     @IBAction func swipeLeft(_ sender: UISwipeGestureRecognizer) {
@@ -45,21 +45,6 @@ class AnswerScene: UIViewController {
         } else {
             performSegue(withIdentifier: "AnswerToQuestionSegue", sender: self)
         }
-    }
-    
-    
-    func getAnswerText(letter: String) -> String {
-        var result = ""
-        if letter == "A" {
-            result = variables.remainingQuestions[0].A
-        } else if letter == "B" {
-            result = variables.remainingQuestions[0].B
-        } else if letter == "C" {
-            result = variables.remainingQuestions[0].C
-        } else if letter == "D" {
-            result = variables.remainingQuestions[0].D
-        }
-        return result
     }
 
     @IBAction func nextButton(_ sender: UIButton) {

@@ -11,18 +11,12 @@ import UIKit
 
 class Question {
     var question: String
-    var A: String
-    var B: String
-    var C: String
-    var D: String
     var correctAnswer: String
+    var answers: [String]
     
-    init(question: String, A: String, B: String, C: String, D: String, correctAnswer: String) {
+    init(question: String, answers: [String], correctAnswer: String) {
         self.question = question
-        self.A = A
-        self.B = B
-        self.C = C
-        self.D = D
+        self.answers = answers
         self.correctAnswer = correctAnswer
     }
 }

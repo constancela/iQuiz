@@ -16,81 +16,99 @@ struct variables {
     static var score = 0
 }
 
+struct quiz: Decodable {
+    let title: String
+    let desc: String
+    let questions: [question]
+}
+
+struct question: Decodable {
+    let text: String
+    let answer: String
+    let answers: [String]
+}
+
 class ListScreen: UIViewController {
     var quizzes: [Quiz] = []
+    let storage = UserDefaults.standard
     @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        quizzes = createQuizList()
         variables.score = 0
+        
+        if Reachability.isConnectedToNetwork() {
+            print("Internet Connection Available!")
+            self.downloadData()
+        } else {
+            print("Internet Connection not Available!")
+            self.populateQuizzes(data: self.storage.object(forKey: "jsonQuiz") as! Data)
+        }
+    }
+    
+    // Download json data online
+    func downloadData() {
+        let jsonUrl = "https://tednewardsandbox.site44.com/questions.json"
+        guard let url = URL(string: jsonUrl) else { return }
+        URLSession.shared.dataTask(with: url) { (data, response, err) in
+            guard let data = data else { return }
+            self.storage.set(data, forKey: "jsonQuiz")
+            self.populateQuizzes(data: data)
+        }.resume()
+    }
+    
+    // Populate quiz app from json data
+    func populateQuizzes(data: Data) {
+        var quizzes: [Quiz] = []
+        do {
+            let jsonQuiz = try
+                JSONDecoder().decode([quiz].self, from: data)
+            for quiz in jsonQuiz {
+                var questionList: [Question] = []
+                for question in quiz.questions {
+                    questionList.append(Question(question: question.text,
+                                                 answers: question.answers,
+                                                 correctAnswer: question.answer))
+                }
+                quizzes.append(Quiz(image: #imageLiteral(resourceName: "math"), subject: quiz.title, description: quiz.desc, questions: questionList))
+                self.quizzes = quizzes
+            }
+        } catch let jsonErr {
+            print ("Error serializing json:", jsonErr)
+        }
+    }
+    
+    // No internet connection alert
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if !Reachability.isConnectedToNetwork() {
+            let alert = UIAlertController(title: "No Internet Connection", message: "Go online to update quizzes", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .`default`, handler: { _ in
+                NSLog("The \"OK\" alert occured.")
+            }))
+            present(alert, animated: true, completion: nil)
+        }
     }
 
     // Settings
     @IBAction func settingsButton(_ sender: UIBarButtonItem) {
         let alert = UIAlertController(title: "Settings", message: "Settings go here", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .`default`, handler: { _ in
-            NSLog("The \"OK\" alert occured.")
+        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default))
+        alert.addAction(UIAlertAction(title: "Check now", style: .default, handler: { action in
+            var alertMessage: String
+            if Reachability.isConnectedToNetwork() {
+                self.downloadData()
+                self.tableView.reloadData()
+                alertMessage = "You are connected. Quizzes updated."
+            } else {
+                alertMessage = "Error downloading data. Try again with connection."
+            }
+            let alert2 = UIAlertController(title: "Connection Status", message: alertMessage, preferredStyle: .alert)
+            alert2.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default))
+            self.present(alert2, animated: true, completion: nil)
         }))
         self.present(alert, animated: true, completion: nil)
     }
-    
-    // Create Math Questions
-    func createMathQuestions() -> [Question] {
-        var questionList: [Question] = []
-        questionList.append(Question(question: "What is 2 * 9?",
-                                     A: "18", B: "7", C: "11", D: "20",
-                                     correctAnswer: "A"))
-        questionList.append(Question(question: "What is 5 + 3 * 2?",
-                                     A: "12", B: "16", C: "11", D: "18",
-                                     correctAnswer: "C"))
-        questionList.append(Question(question: "What is the square root of 256?",
-                                     A: "13", B: "16", C: "9", D: "11",
-                                     correctAnswer: "B"))
-        return questionList
-    }
-    
-    // Create Marvel Questions
-    func createMarvelQuestions() -> [Question] {
-        var questionList: [Question] = []
-        questionList.append(Question(question: "Thor's hammer is made of metal from the heart of a(n) _____",
-                                     A: "Asteroid", B: "Comet", C: "Star", D: "Black Hole",
-                                     correctAnswer: "C"))
-        questionList.append(Question(question: "What is the name of the villian in Ant Man?",
-                                     A: "Yellowjacket", B: "Hornet", C: "Wasp", D: "BumbleBee",
-                                     correctAnswer: "A"))
-        questionList.append(Question(question: "What is Black Widow's real name?",
-                                     A: "Natasha Ravenova", B: "Natasha Romanova", C: "Natalia Ravenova", D: "Natalia Romanova",
-                                     correctAnswer: "D"))
-        return questionList
-    }
-    
-    // Create Science Questions
-    func createScienceQuestions() -> [Question] {
-        var questionList: [Question] = []
-        questionList.append(Question(question: "What is the fifth planet from the sun?",
-                                     A: "Venus", B: "Jupiter", C: "Saturn", D: "Mercury",
-                                     correctAnswer: "B"))
-        questionList.append(Question(question: "What is the atomic number of oxygen?",
-                                     A: "8", B: "9", C: "10", D: "16",
-                                     correctAnswer: "A"))
-        questionList.append(Question(question: "What is the greatest element in Earth's atmosphere?",
-                                     A: "Oxygen", B: "Carbon Dioxide", C: "Nitrogen", D: "Argon",
-                                     correctAnswer: "C"))
-        return questionList
-    }
-
-    // Create Quizzes
-    func createQuizList() -> [Quiz] {
-        var quizList: [Quiz] = []
-        quizList.append(Quiz(image: #imageLiteral(resourceName: "math"), subject: "Mathematics", description: "Are you a math wizard? Test your math skills!", questions: createMathQuestions()))
-        quizList.append(Quiz(image: #imageLiteral(resourceName: "marvel"), subject: "Marvel Super Heroes", description: "How well do you know your favorite heroes?", questions: createMarvelQuestions()))
-        quizList.append(Quiz(image: #imageLiteral(resourceName: "science"), subject: "Science", description: "Test your science knowledge, Einstein!", questions: createScienceQuestions()))
-        
-        return quizList
-    }
-    
-    
 }
 
 extension ListScreen: UITableViewDataSource, UITableViewDelegate {
